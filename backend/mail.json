@@ -1,0 +1,30 @@
+[
+    {
+      "id": 0,
+      "subject": "Vacation Plans (sub)",
+      "sender": "Jane Smith",
+      "date": "1:44 PM",
+      "body": "Here are the plans for our vacation next month."
+    },
+    {
+      "id": 1,
+      "subject": "Some Text (sub)",
+      "sender": "Erik Smith",
+      "date": "1:44 PM",
+      "body": "lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+    },
+    {
+      "id": 2,
+      "subject": "App Usage (sub)",
+      "sender": "John Doe",
+      "date": "1:44 PM",
+      "body": "is it easy to use this app in real life?"
+    },
+    {
+      "id": 3,
+      "subject": "Help ! (sub)",
+      "sender": "Jhonny Bro",
+      "date": "1:44 PM",
+      "body": "Let me help if anyone is struckt in the middle of the road."
+    }
+]
