@@ -16,7 +16,7 @@ function Mails() {
 
   useEffect(() => {
     axios.get("http://localhost:5000/home").then((response) => {
-      setMails(response.data);
+      setMails(response.data.filter(mail => !mail.isDeleted));
       setIsHovered(Array(response.data.length).fill(false));
     });
   }, []);
@@ -58,7 +58,7 @@ function Mails() {
 
   return (
     <div>
-      <table className="w-full text-sm cursor-pointer">
+      <table className="w-full text-sm cursor-pointer font-thin text-slate-800">
         <tbody>
           {mails.map((mail, index) => (
             <tr
@@ -75,12 +75,16 @@ function Mails() {
                 {mail.isStarred ? (
                   <FaStar
                     className="ml-1"
-                    onClick={() => handleStarClick(mail.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                        handleStarClick(mail.id)}}
                   />
                 ) : (
                   <FaRegStar
                     className="ml-1"
-                    onClick={() => handleStarClick(mail.id)}
+                    onClick={(e) =>{ 
+                      e.stopPropagation();
+                      handleStarClick(mail.id)}}
                   />
                 )}
               </td>
@@ -99,7 +103,7 @@ function Mails() {
                     <IoMdTime className="h-4 w-4 mr-2 rounded-full hover:bg-slate-300" />
                   </div>
                 ) : (
-                  <span style={{ marginLeft: "auto" }}>{mail.datte}</span>
+                  <span style={{ marginLeft: "auto", fontSize: "12px"}}>{mail.datte}</span>
                 )}
               </td>
             </tr>

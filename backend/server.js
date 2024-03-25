@@ -59,3 +59,21 @@ app.put('/mails/:id', (req, res) => {
     }
   });
 });
+
+app.put('/delete/:id', (req, res) => {
+  const { id } = req.params;
+  const { isStarred } = req.body;
+  const query = 'UPDATE mails SET isDeleted = ? WHERE id = ?';
+  connection.query(query, [isStarred, id], (err, result) => {
+    if (err) {
+      console.error('Error updating isDelted value:', err);
+      res.status(500).json({ error: 'Failed to update isDeleted value.' });
+      return;
+    }
+    if (result.affectedRows === 0) {
+      res.status(404).json({ error: 'Mail not found.' });
+    } else {
+      res.json({ message: 'isDeleted value updated successfully.' });
+    }
+  });
+});
