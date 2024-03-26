@@ -62,9 +62,9 @@ app.put('/mails/:id', (req, res) => {
 
 app.put('/delete/:id', (req, res) => {
   const { id } = req.params;
-  const { isStarred } = req.body;
+  const { isDeleted } = req.body;
   const query = 'UPDATE mails SET isDeleted = ? WHERE id = ?';
-  connection.query(query, [isStarred, id], (err, result) => {
+  connection.query(query, [isDeleted, id], (err, result) => {
     if (err) {
       console.error('Error updating isDelted value:', err);
       res.status(500).json({ error: 'Failed to update isDeleted value.' });

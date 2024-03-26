@@ -93,12 +93,16 @@ function Starred() {
                         {mail.isStarred ? (
                           <FaStar
                             className="ml-1"
-                            onClick={() => handleStarClick(mail.id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleStarClick(mail.id)}}
                           />
                         ) : (
                           <FaRegStar
                             className="ml-1"
-                            onClick={() => handleStarClick(mail.id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleStarClick(mail.id)}}
                           />
                         )}
                       </td>

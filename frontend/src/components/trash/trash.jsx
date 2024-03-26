@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FaRegStar } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 import { RiInboxArchiveLine } from "react-icons/ri";
@@ -11,18 +11,37 @@ import OptionsTop from "../optionsontop/optionsOnTop";
 import AddOns from "../addons/addOns";
 import SidebarExtended from "../sidebar-extended/sidebarExtended";
 import { useNavigate } from "react-router-dom";
+import MailCountContext from "../../context/mailContext"
 import axios from "axios";
 
 function Trash() {
   const navigate = useNavigate();
   const [mails, setMails] = useState([]);
+  const { mailCount, setMailCount } = useContext(MailCountContext);
   const [isHovered, setIsHovered] = useState(Array(mails.length).fill(false));
 
+function getMails() {
+  axios.get("http://localhost:5000/home").then((response) => {
+    setMails(response.data);
+    const filteredMails = response.data.filter(
+      (mail) => mail.isDeleted === 0
+    );
+    setMailCount(filteredMails.length);
+    setIsHovered(Array(response.data.length).fill(false));
+  });
+}
+
+function getMailsCounts() {
+  axios.get("http://localhost:5000/home").then((response) => {
+    const filteredMails = response.data.filter(
+      (mail) => mail.isDeleted === 0
+    );
+    setMailCount(filteredMails.length);
+  });
+}
+
   useEffect(() => {
-    axios.get("http://localhost:5000/home").then((response) => {
-      setMails(response.data);
-      setIsHovered(Array(response.data.length).fill(false));
-    });
+    getMails();
   }, []);
 
   const handleMouseEnter = (index) => {
@@ -80,6 +99,7 @@ function Trash() {
       .then((response) => {
         setMails(updatedMails);
         console.log(response.data);
+        getMailsCounts();
       })
       .catch((error) => {
         console.error("Error updating isStarred value:", error);

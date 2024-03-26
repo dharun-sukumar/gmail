@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { BiPencil } from "react-icons/bi";
 import { MdInbox } from "react-icons/md";
 import { FaRegStar } from "react-icons/fa";
@@ -9,15 +9,19 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { IoTrash } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
+import MailCountContext from "../../context/mailContext"
 
 function SidebarExtended() {
-  const [mailCount, setMailCount] = useState(0);
+  const { mailCount, setMailCount } = useContext(MailCountContext);
   const [showMore, setShowMore] = useState(false);
   const [page, setPage] = useState("");
 
   useEffect(() => {
     axios.get("http://localhost:5000/home").then((response) => {
-      setMailCount(response.data.length);
+      const filteredMails = response.data.filter(
+        (mail) => mail.isDeleted === 0
+      );
+      setMailCount(filteredMails.length);
     });
   }, []);
 
@@ -32,7 +36,10 @@ function SidebarExtended() {
 
       <NavLink
         to="/"
-        className={`flex items-center justify-center w-52 rounded-xl hover:bg-slate-200 ${page==="/" ? 'bg-blue-500' : ''}`}>
+        className={`flex items-center justify-center w-52 rounded-xl hover:bg-slate-200 ${
+          page === "/" ? "bg-blue-500" : ""
+        }`}
+      >
         <div className="flex w-[90%] items-center h-7 justify-center">
           <MdInbox className="mr-4 h-5 w-5" />
           <div className="flex text-sm font-medium justify-between items-center w-[100%]">
@@ -43,8 +50,13 @@ function SidebarExtended() {
       </NavLink>
       <NavLink
         to="/starred"
-        className={`flex items-center justify-center w-52 rounded-xl cursor-pointer hover:bg-slate-200${page==="/starred" ? 'bg-blue-500' : ''}`}
-        onClick={() => {setPage("/starred");console.log(page)}}
+        className={`flex items-center justify-center w-52 rounded-xl cursor-pointer hover:bg-slate-200${
+          page === "/starred" ? "bg-blue-500" : ""
+        }`}
+        onClick={() => {
+          setPage("/starred");
+          console.log(page);
+        }}
       >
         <div className="flex w-[90%] items-center h-7 justify-center">
           <FaRegStar className="mr-4 h-5 w-5" />
@@ -77,27 +89,32 @@ function SidebarExtended() {
           </div>
         </div>
       </div>
-    
-      <div className={`flex items-center justify-center w-52 rounded-xl hover:bg-slate-200 ${showMore ? 'bg-slate-200' : ''}`} onClick={() => setShowMore(!showMore)}>
-          <div className="flex w-[90%] items-center h-7 justify-center">
-            <IoMdArrowDropdown className="mr-4 h-5 w-5" />
-            <div className="flex text-sm justify-between items-center w-[100%]">
-            <p>{showMore ? 'Less' : 'More'}</p>
-            </div>
+
+      <div
+        className={`flex items-center justify-center w-52 rounded-xl hover:bg-slate-200 ${
+          showMore ? "bg-slate-200" : ""
+        }`}
+        onClick={() => setShowMore(!showMore)}
+      >
+        <div className="flex w-[90%] items-center h-7 justify-center">
+          <IoMdArrowDropdown className="mr-4 h-5 w-5" />
+          <div className="flex text-sm justify-between items-center w-[100%]">
+            <p>{showMore ? "Less" : "More"}</p>
           </div>
         </div>
-        {showMore && (
-          <NavLink to="/trash" className="flex flex-col">
-            <div className="flex items-center justify-center w-52 rounded-xl hover:bg-slate-200">
-              <div className="flex w-[90%] items-center h-7 justify-center">
-                <IoTrash className="mr-4 h-5 w-5" />
-                <div className="flex text-sm justify-between items-center w-[100%]">
-                  <p>Trash</p>
-                </div>
+      </div>
+      {showMore && (
+        <NavLink to="/trash" className="flex flex-col">
+          <div className="flex items-center justify-center w-52 rounded-xl hover:bg-slate-200">
+            <div className="flex w-[90%] items-center h-7 justify-center">
+              <IoTrash className="mr-4 h-5 w-5" />
+              <div className="flex text-sm justify-between items-center w-[100%]">
+                <p>Trash</p>
               </div>
             </div>
-            </NavLink>
-        )}
+          </div>
+        </NavLink>
+      )}
       {/* {showCompose && <Compose closeCompose={handleComposeClick} />} */}
     </div>
   );
